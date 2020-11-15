@@ -46,6 +46,15 @@ class HomePage extends StatelessWidget {
               ),
             )
           : Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                    weatherModel.gettMaterialColor()[300],
+                    weatherModel.gettMaterialColor()[500],
+                    weatherModel.gettMaterialColor()[700],
+                  ])),
               padding: EdgeInsets.only(top: 100),
               child: ListView(
                 children: [
@@ -59,7 +68,8 @@ class HomePage extends StatelessWidget {
                             letterSpacing: 1),
                       ),
                       Text(
-                        '',
+                        TimeOfDay.fromDateTime(weatherModel.createdTime)
+                            .format(context),
                         style: TextStyle(fontSize: 15, letterSpacing: .7),
                       ),
                     ],

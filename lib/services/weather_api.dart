@@ -10,18 +10,23 @@ class WeatherAPi {
         await http.get('$_baseUrl/api/location/search/?query=$cityName');
     var name = '';
 
-    if (response.statusCode == 200) {
-      var jsonList = jsonDecode(response.body);
-      var jsonMap = jsonList[0];
-      int id = jsonMap['woeid'];
-      return id;
-    } else {
-      //do something else
+    try {
+      if (response.statusCode == 200) {
+        var jsonList = jsonDecode(response.body);
+        var jsonMap = jsonList[0];
+        int id = jsonMap['woeid'];
+        return id;
+      } else {
+        //do something else
+      }
+    } catch (ex) {
+      // do something
     }
   }
 
   Future<WeatherModel> fetchWeather(String cityName) async {
     int id = await fetchId(cityName);
+    print('this is the id $id');
     var response = await http.get('$_baseUrl/api/location/$id/');
 
     if (response.statusCode == 200) {
@@ -29,6 +34,7 @@ class WeatherAPi {
       var weatherMap = dataMap['consolidated_weather'][0];
 
       WeatherModel weatherModel = WeatherModel(
+          createdTime: DateTime.now(),
           weatherStateName: weatherMap['weather_state_name'],
           minTemp: weatherMap['min_temp'],
           maxTemp: weatherMap['max_temp'],
@@ -36,7 +42,7 @@ class WeatherAPi {
           cityName: dataMap['title']);
       return weatherModel;
     } else {
-      //do something else
+      throw Exception('Error in  status code ');
     }
   }
 }
